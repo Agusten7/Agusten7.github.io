@@ -20,6 +20,10 @@ nav ul {
 	display: flex;
 }
 
+a {
+	color: red;
+}
+
 nav li {
 	margin-right: 20px;
 	padding-left: 20px;

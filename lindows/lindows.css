@@ -13,6 +13,10 @@ h1 {
 	margin: 0;
 }
 
+h2 {
+	text-decoration: underline;
+}
+
 nav ul {
 	list-style-type: none;
 	margin: 0;

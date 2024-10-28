@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Your Video</title>
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="logo-container">
+        <a href="/" class="logo">
+            <img src="/favicon.png" alt="Logo de la página" class="logo-img">
+        </a>
+    </div>
+
+    <div class="container">
+        
+        <h1>Upload Your Video</h1>
+        
+        
+        <form id="uploadForm">
+            <div class="input-group">
+                <label for="thumbnail">Upload Thumbnail:</label>
+                <input type="file" id="thumbnail" name="thumbnail" accept="image/*" class="input-thumbnail">
+                <label for="thumbnail" class="upload-image">
+                    <img src="thumbnail.png" id="thumbnail" class="image-thumbnail">
+                </label>
+            </div>
+
+            <div class="input-group">
+                <label for="title">Title of video:</label>
+                <input type="text" id="title" name="title" placeholder="Write a title">
+            </div>
+
+            <button type="submit">Send</button>
+        </form>
+
+        <p id="status"></p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

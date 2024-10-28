@@ -1,0 +1,100 @@
+body {
+    background-color: #181818;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+}
+
+.logo-container {
+    position: absolute; /* Lo posiciona en la esquina */
+    top: 10px; /* Ajusta la distancia desde la parte superior */
+    left: 10px; /* Ajusta la distancia desde la izquierda */
+}
+
+.logo-img {
+    width: 50px; /* Cambia el tamaño del logo si es necesario */
+}
+
+h1 {
+    font-size: 3rem;
+    text-align: center;
+    margin-top: 5rem;
+    margin-bottom: 4rem;
+}
+
+.gallery {
+    display: flex; /* Cambiar a flex para que se alineen en una fila */
+    max-width: 1000px; /* Ancho máximo de la galería */
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.item {
+    text-align: center;
+    flex: 1; /* Permite que los elementos se distribuyan equitativamente */
+    margin: 0 1rem; /* Espacio horizontal entre elementos */
+    max-width: 218px;
+    justify-content: center;
+}
+
+.image-container {
+    border-radius: 8px;
+    margin-left: 9px;
+    width: 200px;
+    height: 112px;
+    background-color: black;
+    align-items: center;
+    justify-content: center;
+}
+
+img {
+    width: 100%; /* La imagen ocupará el 100% del contenedor */
+    border-radius: 8px; /* Bordes redondeados pa */
+    object-fit: contain;
+    height: 100%;
+    
+}
+
+.title-text {
+    font-size: 1rem;
+    margin-top: 0.5rem; /* Espacio entre la imagen y el título */
+    font-weight: bold;
+    text-align: center;
+}
+
+
+.button-container {
+    margin-top: 30px;
+}
+
+.upload-button {
+    background-color: rgb(212, 0, 0);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.upload-button:hover {
+    background-color: darkred;
+}
+
+.logo-container {
+    position: absolute; /* Lo posiciona en la esquina */
+    top: 10px; /* Ajusta la distancia desde la parte superior */
+    left: 10px; /* Ajusta la distancia desde la izquierda */
+}
+
+.logo-img {
+    width: 50px; /* Cambia el tamaño del logo si es necesario */
+}
+
+.information {
+    font-size: 12px;
+}

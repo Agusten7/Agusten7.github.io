@@ -1,0 +1,91 @@
+/* Estilos generales */
+body {
+    background-color: #181818; /* Fondo oscuro */
+    color: #FFFFFF; /* Texto blanco */
+    font-family: Arial, sans-serif;
+    text-align: center; /* Centrar texto */
+    margin: 0;
+    padding: 0;
+    display: flex; /* Usar flexbox para centrar los elementos */
+    flex-direction: column; /* Colocar elementos en una columna */
+    align-items: center; /* Centrar elementos horizontalmente */
+    justify-content: flex-start; /* Alinear al inicio verticalmente */
+    height: 100vh; /* Altura completa de la ventana */
+}
+
+.logo-container {
+    position: absolute; /* Lo posiciona en la esquina */
+    top: 10px; /* Ajusta la distancia desde la parte superior */
+    left: 10px; /* Ajusta la distancia desde la izquierda */
+}
+
+.logo-img {
+    width: 50px; /* Cambia el tamaño del logo si es necesario */
+}
+
+/* Título principal */
+h1 {
+    font-size: 2.5em; /* Tamaño grande para el título principal */
+    margin-top: 40px; /* Espacio en la parte superior */
+}
+
+/* Contenedor de video */
+.video-container {
+    margin: 20px 0; /* Espacio alrededor del contenedor */
+}
+
+/* Contenedor de la imagen */
+.image-container {
+    width: 640px; /* Ancho fijo */
+    height: 360px; /* Alto fijo */
+    background-color: black; /* Fondo negro */
+    display: flex; /* Usar flexbox para centrar la imagen */
+    align-items: center; /* Centrar verticalmente */
+    justify-content: center; /* Centrar horizontalmente */
+    border-radius: 8px; /* Bordes redondeados */
+    overflow: hidden; /* Ocultar desbordamiento */
+}
+
+/* Imagen del thumbnail */
+.thumbnail {
+    width: 100%; /* La imagen no excederá el ancho del contenedor */
+    height: 100%; /* La imagen no excederá la altura del contenedor */
+    object-fit: contain; /* Ajustar imagen sin distorsión */
+}
+
+/* Título del video */
+.video-title {
+    font-size: 1.5em; /* Tamaño más pequeño para el título del video */
+    margin: 10px 0; /* Espacio en la parte superior e inferior */
+}
+
+/* Estilos para los botones */
+.buttons-containers {
+    display: flex; /* Usar flexbox para alinear los botones */
+    justify-content: center; /* Centrar los botones horizontalmente */
+    gap: 10px; /* Espacio entre los botones */
+    margin-top: 20px; /* Espacio en la parte superior */
+}
+
+button {
+    background-color: #282828; /* Fondo de los botones */
+    color: white; /* Texto en blanco */
+    border: none; /* Sin borde */
+    padding: 1rem 2rem; /* Espaciado interno */
+    font-size: 1rem; /* Tamaño de fuente */
+    cursor: pointer; /* Cambiar el cursor al pasar el ratón */
+    border-radius: 4px; /* Bordes redondeados */
+    transition: background-color 0.3s; /* Transición al cambiar el color */
+}
+
+button:hover {
+    background-color: #383838; /* Color de fondo al pasar el ratón */
+}
+
+.red-button {
+    background-color: rgb(212, 0, 0); /* Fondo rojo para el botón */
+}
+
+.red-button:hover {
+    background-color: darkred; /* Color de fondo al pasar el ratón */
+}

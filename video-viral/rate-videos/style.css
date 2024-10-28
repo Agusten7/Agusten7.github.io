@@ -1,0 +1,70 @@
+body {
+    background-color: #181818;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+}
+
+.logo-container {
+    position: absolute; /* Lo posiciona en la esquina */
+    top: 10px; /* Ajusta la distancia desde la parte superior */
+    left: 10px; /* Ajusta la distancia desde la izquierda */
+}
+
+.logo-img {
+    width: 50px; /* Cambia el tamaño del logo si es necesario */
+}
+
+h1 {
+    font-size: 3rem;
+    text-align: center;
+    margin-top: 8rem;
+    margin-bottom: 2rem;
+}
+
+.gallery {
+    display: flex; /* Cambiar a flex para que se alineen en una fila */
+    justify-content: space-around; /* Espacio igual entre los elementos */
+    max-width: 1000px; /* Ancho máximo de la galería */
+    width: 100%; /* Ancho completo dentro del contenedor */
+    margin-top: 64px;
+}
+
+.item {
+    align-items: center;
+    text-align: center;
+    flex: 1; /* Permite que los elementos se distribuyan equitativamente */
+    margin: 0 1rem; /* Espacio horizontal entre elementos */
+}
+
+.image-container {
+    border-radius: 8px;
+    width: 100%;
+    height: 125px;
+    background-color: black;
+}
+
+img {
+    width: 100%; /* La imagen ocupará el 100% del contenedor */
+    border-radius: 8px; /* Bordes redondeados pa */
+    object-fit: contain;
+    height: 100%;
+    
+}
+
+.title-text {
+    font-size: 13px;
+    margin-top: 0.5rem; /* Espacio entre la imagen y el título */
+    font-weight: bold;
+    text-align: left;
+}
+
+.counter-container {
+    border-radius: 100px;
+    text-align: center;
+    background-color: rgb(230, 0, 0);
+    width: 70px;
+}

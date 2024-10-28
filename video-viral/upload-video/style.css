@@ -1,0 +1,99 @@
+/* Estilo Modo Oscuro YouTube */
+body {
+    background-color: #181818;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.logo-container {
+    position: absolute; /* Lo posiciona en la esquina */
+    top: 10px; /* Ajusta la distancia desde la parte superior */
+    left: 10px; /* Ajusta la distancia desde la izquierda */
+}
+
+.logo-img {
+    width: 50px; /* Cambia el tamaño del logo si es necesario */
+}
+
+.container {
+    text-align: center;
+    width: 400px;
+    background-color: #282828;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+label {
+    font-size: 16px;
+    color: #b3b3b3;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"] {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: white;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #cc0000;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #ff0000;
+}
+
+#status {
+    margin-top: 20px;
+    color: #b3b3b3;
+}
+
+
+.upload-image {
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 95%;
+    height: 180px;
+    padding: 10px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: white;
+    border-radius: 5px;
+}
+
+img {
+    height: 100%;
+}
+
+.input-thumbnail {
+    display: none;
+}

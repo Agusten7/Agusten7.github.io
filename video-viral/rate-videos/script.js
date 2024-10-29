@@ -52,7 +52,7 @@ async function loadVideos() {
         const data = await response.json();
         
         // Selecciona 4 videos aleatorios del JSON
-        const randomVideos = getRandomVideos(data.videos, 4);
+        const randomVideos = getRandomVideos(data.data.videos, 4);
 
         // Selecciona el contenedor de la galería
         const gallery = document.querySelector('.gallery');

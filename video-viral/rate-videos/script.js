@@ -48,7 +48,7 @@ function setTimer(){
 async function loadVideos() {
     try {
         // Realiza una solicitud GET al API para obtener los datos
-        const response = await fetch('http://127.0.0.1:5000/api/get-videos'); // Cambia la URL según tu API
+        const response = await fetch('https://api-test-mocha.vercel.app/api/get-videos'); // Cambia la URL según tu API
         const data = await response.json();
         
         // Selecciona 4 videos aleatorios del JSON

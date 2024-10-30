@@ -31,7 +31,7 @@ form.addEventListener('submit', async function(e) {
                 };
                 
                 // Realiza la petición a la API con el método POST
-                const response = await fetch(`${api_domain}/api/post_video`, {
+                const response = await fetch(`${api_domain}/api/create_video`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

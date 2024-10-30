@@ -1,4 +1,4 @@
-
+const api_domain = "https://api-test-mocha.vercel.app";
 // Función para generar un UUID v4 (string aleatorio)
 function generarUUIDv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -32,7 +32,7 @@ function createUser(userId) {
 
         const postData = {"user_id":userId}
         // Realiza la solicitud POST a tu API
-        const response = fetch('http://127.0.0.1:5000/api/create-user', {
+        const response = fetch(`${api_domain}/api/create_user`, {
             method: 'POST',  // Método POST
             headers: {
                 'Content-Type': 'application/json',

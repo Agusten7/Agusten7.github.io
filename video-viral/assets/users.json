@@ -1,12 +1,1 @@
-{
-    "users": {
-        "6c3a60bb-896e-4038-8dea-712c148ac08f": {
-            "user_id": "6c3a60bb-896e-4038-8dea-712c148ac08f",
-            "points": 0
-        },
-        "b0c05181-f69e-41eb-ad36-10a6c6eec8aa": {
-            "user_id": "b0c05181-f69e-41eb-ad36-10a6c6eec8aa",
-            "points": 2
-        }
-    }
-}
+{'users': {'6c3a60bb-896e-4038-8dea-712c148ac08f': {'user_id': '6c3a60bb-896e-4038-8dea-712c148ac08f', 'points': 0}, 'b0c05181-f69e-41eb-ad36-10a6c6eec8aa': {'user_id': 'b0c05181-f69e-41eb-ad36-10a6c6eec8aa', 'points': 2}, 'b0c05181-f69e-41eb-ad36-10a6c6eec8cc': {'user_id': 'b0c05181-f69e-41eb-ad36-10a6c6eec8cc', 'points': 0}}}

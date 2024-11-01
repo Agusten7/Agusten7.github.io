@@ -1,10 +1,10 @@
+const api_domain = "https://api-video-viral-mocha.vercel.app";
+
 function getCookieValue(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
-
-const api_domain = "https://api-test-mocha.vercel.app";
 
 const form = document.getElementById('uploadForm');
 form.addEventListener('submit', async function(e) {
@@ -41,13 +41,15 @@ form.addEventListener('submit', async function(e) {
                 
                 if (response.ok) {
                     const result = await response.json();
-                    const thumbnailUrl = result.response.data.thumbnail;
-                    const videoTitle = result.response.data.title;
-                    const videoId = result.response.data.id;
+                    const imageUrl = result.data.image_url;
+                    const videoTitle = result.data.title;
+                    const videoId = result.data.id;
                     
-                    window.location.href = `success.html?id=${encodeURIComponent(videoId)}&title=${encodeURIComponent(videoTitle)}&thumbnail=${encodeURIComponent(thumbnailUrl)}`;
+                    window.location.href = `success.html?id=${encodeURIComponent(videoId)}&title=${encodeURIComponent(videoTitle)}&thumbnail=${encodeURIComponent(imageUrl)}`;
                 } else {
-                    document.getElementById('status').innerText = "Error uploading video";
+                    const result = await response.json();
+                    const message = result.message;
+                    document.getElementById('status').innerText = message;
                 }
             };
         } catch (error) {

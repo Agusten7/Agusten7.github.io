@@ -1,3 +1,4 @@
+const api_domain = 'https://api-video-viral-mocha.vercel.app';
 // Función para obtener 4 elementos aleatorios de un arreglo
 function getRandomVideos(videos, count) {
     const shuffled = videos.sort(() => 0.5 - Math.random()); // Mezcla los videos
@@ -48,9 +49,8 @@ function setTimer(){
 async function loadVideos() {
     try {
         // Realiza una solicitud GET al API para obtener los datos
-        const response = await fetch('https://api-test-mocha.vercel.app/api/get-videos'); // Cambia la URL según tu API
+        const response = await fetch(`${api_domain}/api/get_videos`); // Cambia la URL según tu API
         const data = await response.json();
-        console.log("[+] Get Videos response: ", data);
         
         // Selecciona 4 videos aleatorios del JSON
         const randomVideos = getRandomVideos(data.data.videos, 4);
@@ -88,7 +88,10 @@ async function loadVideos() {
         });
         setTimer();
     } catch (error) {
-        console.error('Error al cargar los videos:', error);
+        const counterElement = document.querySelector('.counter-container');
+        counterElement.style.width = '500px';
+        const counterText = document.querySelector('.counter-text');
+        counterText.textContent = 'Error loading videos. Try Again Later';
     }
     
 }
@@ -114,7 +117,7 @@ async function updateData() {
                     
                     try {
                         // Realiza la solicitud POST a tu API
-                        const response = await fetch('http://127.0.0.1:5000/api/update_views', {
+                        const response = await fetch(`${api_domain}/api/update_views`, {
                             method: 'POST',  // Método POST
                             headers: {
                                 'Content-Type': 'application/json',
@@ -138,7 +141,7 @@ async function updateData() {
 
                         const postData = {"user_id":user_id}
                         // Realiza la solicitud POST a tu API
-                        const response = await fetch('http://127.0.0.1:5000/api/update-users', {
+                        const response = await fetch(`${api_domain}/api/update_users`, {
                             method: 'POST',  // Método POST
                             headers: {
                                 'Content-Type': 'application/json',
@@ -159,14 +162,12 @@ async function updateData() {
                 });
             });
 
-            console.log(shown_video_ids);
-
             const postData = {
                 "shown_video_ids": shown_video_ids,  // Aquí envías el ID del video
             };
 
             // Asegúrate de esperar la respuesta del servidor
-            const updateResponse = await fetch('http://127.0.0.1:5000/api/update_data', {
+            const updateResponse = await fetch(`${api_domain}/api/update_videos_data`, {
                 method: 'POST',  // Aquí aseguramos que se use POST
                 headers: {
                     'Content-Type': 'application/json',
@@ -176,9 +177,9 @@ async function updateData() {
 
             // Verificar si la solicitud fue exitosa
             if (updateResponse.ok) {
-                console.log("Data updated successfully");
+                console.log("Videos data updated successfully");
             } else {
-                console.error("Error updating data");
+                console.error("Error updating Videos data");
             }
     } catch (error) {
             console.error('Error updating data', error);
@@ -190,39 +191,3 @@ async function updateData() {
 // Llama a la función para cargar los videos cuando la página se carga
 loadVideos();
 
-// Selecciona el contenedor con clase 'gallery'
-const gallery = document.querySelector('.gallery');
-const directChildren = gallery.querySelectorAll(':scope > div');
-
-// Añade un listener para detectar los clics en cada 'div'
-directChildren.forEach(div => {
-    div.addEventListener('click', async () => {
-        // Obtén la segunda clase del div (suponiendo que es la ID que quieres enviar)
-        const videoId = div.classList[1];  // O ajusta si la ID está en otro lugar
-        
-        // Crea el objeto que quieres enviar a la API
-        const postData = {
-            "video_id": videoId
-        };
-        
-        try {
-            // Realiza la solicitud POST a tu API
-            const response = await fetch('http://127.0.0.1:5000/api/update_views', {
-                method: 'POST',  // Método POST
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(postData)  // Convierte el objeto postData a JSON
-            });
-
-            if (response.ok) {
-                console.log("Request successful for video ID:", videoId);
-                location.reload(true);
-            } else {
-                console.error("Error in request");
-            }
-        } catch (error) {
-            console.error("Error during the request", error);
-        }
-    });
-});

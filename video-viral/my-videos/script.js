@@ -1,9 +1,10 @@
+const api_domain = 'https://api-video-viral-mocha.vercel.app';
 // Función para cargar los videos desde localStorage y mostrarlos en la página
 function loadVideos() {
     const videos = JSON.parse(localStorage.getItem('my-videos')) || { videos: [] };
     const gallery = document.getElementById('gallery');
 
-    const url = 'http://127.0.0.1:5000/api/get-videos';
+    const url = `${api_domain}/api/get_videos`;
 
     fetch(url)
         .then(response => {
@@ -36,7 +37,7 @@ function loadVideos() {
 
                 const video_id = video.id;
                 
-                data.videos.forEach(video_api => {
+                data.data.videos.forEach(video_api => {
                     if (video_api.id === video_id) {
                         const times_shown = video_api.shown;
                         const times_clicked = video_api.views;

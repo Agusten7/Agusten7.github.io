@@ -11,6 +11,56 @@ function getCookieValue(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+function showMoneyEffect() {
+    const counterElement = document.querySelector('.counter-text');
+    counterElement.textContent = `+1 Point`;
+
+    // Remueve cualquier animación previa
+    counterElement.classList.remove('fade-in-up');
+    void counterElement.offsetWidth; // Fuerza un reflow para reiniciar la animación
+
+    // Añade la clase de animación para que comience
+    counterElement.classList.add('fade-in-up');
+    setTimeout(() => {
+        counterElement.style.opacity = '0'; // Asegúrate de que quede completamente desvanecido
+    }, 2800); // 2000ms coincide con la duración de la animación
+}
+
+// Llamada a la función para mostrar el efecto
+
+
+async function getPoints() {
+    const user_id = getCookieValue("user-id");
+
+    const postData = {
+        "user_id": user_id
+    };
+
+    try {
+        // Realiza la solicitud POST a tu API
+        const response = await fetch(`${api_domain}/api/get_points`, {
+            method: 'POST',  // Método POST
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(postData)  // Convierte el objeto postData a JSON
+        });
+
+        if (response.ok) {
+            const data = await response.json(); // Espera a que se convierta la respuesta a JSON
+            const userPoints = data.data.points; // Accede a los puntos del usuario
+            const pointsText = document.querySelector('.points-text');
+            pointsText.textContent = `Points: ${userPoints}`;
+            console.log(`User Points: ${userPoints}`);
+        } else {
+            console.error("Error updating data");
+        }
+    } catch (error) {
+        console.error("Error during the request", error);
+    }
+}
+
+
 function setTimer(){
     const counterElement = document.querySelector('.counter-text');
 
@@ -23,7 +73,10 @@ function setTimer(){
         // Si el tiempo llega a 0, habilita el botón para votar
         if (timeLeft < 0) {
             clearInterval(countdown);  // Detenemos el contador
-            counterElement.textContent = "👇";
+            const counterElement = document.querySelector('.counter-container');
+            counterElement.style.width = '180px';
+            const counterText = document.querySelector('.counter-text');
+            counterText.textContent = "VOTE NOW";
             // Selecciona todos los elementos con la clase "gallery"
             // Selecciona todos los elementos con la clase "gallery"
             const galleries = document.querySelectorAll('.gallery');
@@ -49,7 +102,7 @@ function setTimer(){
 async function loadVideos() {
     try {
         // Realiza una solicitud GET al API para obtener los datos
-        const response = await fetch(`${api_domain}/api/get_videos`); // Cambia la URL según tu API
+        const response = await fetch(`${api_domain}/api/get_rate_videos`); // Cambia la URL según tu API
         const data = await response.json();
         
         // Selecciona 4 videos aleatorios del JSON
@@ -107,6 +160,9 @@ async function updateData() {
                 shown_video_ids.push(div.classList[1]);  // Añade la segunda clase
 
                 div.addEventListener('click', async () => {
+
+                    showMoneyEffect();
+                    
                     // Obtén la segunda clase del div (suponiendo que es la ID que quieres enviar)
                     const videoId = div.classList[1];  // O ajusta si la ID está en otro lugar
                     
@@ -178,6 +234,7 @@ async function updateData() {
             // Verificar si la solicitud fue exitosa
             if (updateResponse.ok) {
                 console.log("Videos data updated successfully");
+                
             } else {
                 console.error("Error updating Videos data");
             }
@@ -189,5 +246,6 @@ async function updateData() {
 }
 
 // Llama a la función para cargar los videos cuando la página se carga
+getPoints();
 loadVideos();
 

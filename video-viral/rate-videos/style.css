@@ -14,6 +14,12 @@ body {
     left: 10px; /* Ajusta la distancia desde la izquierda */
 }
 
+.user-points{
+    position: absolute; /* Lo posiciona en la esquina */
+    top: 10px; /* Ajusta la distancia desde la parte superior */
+    right: 20px; /* Ajusta la distancia desde la izquierda */
+}
+
 .logo-img {
     width: 50px; /* Cambia el tamaño del logo si es necesario */
 }
@@ -67,4 +73,32 @@ img {
     text-align: center;
     background-color: rgb(230, 0, 0);
     width: 70px;
+}
+
+
+.fade-text {
+    position: absolute;  /* Ajusta según tu diseño */
+    font-size: 24px;     /* Tamaño del texto */
+    color: green;        /* Color del texto */
+    opacity: 0;          /* Empieza completamente desvanecido */
+    transform: translateY(0); /* Posición inicial */
+}
+
+@keyframes fadeUp {
+    0% {
+        opacity: 0;            /* Desvanecido */
+        transform: translateY(20px); /* Un poco más abajo */
+    }
+    50% {
+        opacity: 1;            /* Totalmente visible */
+        transform: translateY(0);    /* Posición original */
+    }
+    100% {
+        opacity: 0;            /* Se desvanece de nuevo */
+        transform: translateY(-20px); /* Se mueve hacia arriba */
+    }
+}
+
+.fade-in-up {
+    animation: fadeUp 3s ease; /* Ajusta la duración y el efecto de la animación */
 }

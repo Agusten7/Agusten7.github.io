@@ -16,6 +16,12 @@ body {
     left: 10px; /* Ajusta la distancia desde la izquierda */
 }
 
+.user-points{
+    position: absolute; /* Lo posiciona en la esquina */
+    top: 10px; /* Ajusta la distancia desde la parte superior */
+    right: 20px; /* Ajusta la distancia desde la izquierda */
+}
+
 .logo-img {
     width: 50px; /* Cambia el tamaño del logo si es necesario */
 }

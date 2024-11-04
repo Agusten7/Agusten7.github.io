@@ -1,5 +1,10 @@
 const api_domain = 'https://api-video-viral-mocha.vercel.app'
 // Función para cargar los videos desde localStorage y mostrarlos en la página
+function getCookieValue(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
 
 async function getPoints() {
     const user_id = getCookieValue("user-id");

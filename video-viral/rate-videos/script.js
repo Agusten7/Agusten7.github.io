@@ -123,7 +123,7 @@ async function loadVideos() {
             
             // Crea el elemento de la imagen
             const img = document.createElement('img');
-            img.src = video.thumbnail;
+            img.src = video.image_url;
             img.alt = video.title;
             
             // Crea el título

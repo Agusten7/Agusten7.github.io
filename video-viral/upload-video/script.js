@@ -74,7 +74,7 @@ form.addEventListener('submit', async function(e) {
                 
                 if (response.ok) {
                     const result = await response.json();
-                    const thumbnail = result.data.thumbnail;
+                    const thumbnail = result.data.image_url;
                     const videoTitle = result.data.title;
                     const videoId = result.data.id;
                     

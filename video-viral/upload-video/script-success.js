@@ -41,16 +41,16 @@ async function getPoints() {
 const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 const title = params.get('title');
-const thumbnail = params.get('thumbnail');
+const image_url = params.get('image_url');
 
 // Establecer el título del video y la imagen del thumbnail
 document.getElementById('videoTitle').innerText = title;
-document.getElementById('thumbnailImage').src = thumbnail;
+document.getElementById('thumbnailImage').src = image_url;
 
 const newVideo = {
     id: decodeURIComponent(id),
     title: decodeURIComponent(title), // Decodifica para espacios y caracteres especiales
-    thumbnail: decodeURIComponent(thumbnail) // Decodifica la URL del thumbnail
+    image_url: decodeURIComponent(image_url) // Decodifica la URL del thumbnail
 };
 
 // Obtener el array actual de videos desde el localStorage

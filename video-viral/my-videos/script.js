@@ -96,7 +96,7 @@ function loadVideos() {
         });
 
 }
-
+getPoints();
 // Cargar los videos al cargar la página
 window.onload = loadVideos;
 

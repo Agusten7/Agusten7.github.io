@@ -38,6 +38,7 @@ h1 {
 /* Contenedor de video */
 .video-container {
     margin: 20px 0; /* Espacio alrededor del contenedor */
+    width: 750px;
 }
 
 /* Contenedor de la imagen */

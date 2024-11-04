@@ -78,7 +78,7 @@ form.addEventListener('submit', async function(e) {
                     const videoTitle = result.data.title;
                     const videoId = result.data.id;
                     
-                    window.location.href = `success.html?id=${encodeURIComponent(videoId)}&title=${encodeURIComponent(videoTitle)}&image_url=${encodeURIComponent(thumbnail)}`;
+                    window.location.href = `success.html?id=${encodeURIComponent(videoId)}&title=${encodeURIComponent(videoTitle)}&image_url=${encodeURIComponent(image_url)}`;
                 } else {
                     const result = await response.json();
                     const message = result.message;

@@ -32,7 +32,7 @@ body {
 /* Título principal */
 h1 {
     font-size: 2.5em; /* Tamaño grande para el título principal */
-    margin-top: 40px; /* Espacio en la parte superior */
+    margin-top: 5rem; /* Espacio en la parte superior */
 }
 
 /* Contenedor de video */
@@ -97,4 +97,42 @@ button:hover {
 
 .red-button:hover {
     background-color: darkred; /* Color de fondo al pasar el ratón */
+}
+
+@media (max-width: 768px) {
+    .video-container {
+        margin-left: 1rem;
+        margin-right: 1rem;
+        width: 90%;               /* El contenedor ocupa todo el ancho disponible */
+        box-sizing: border-box;    /* Incluye el padding en el cálculo del ancho */
+    }
+
+    .image-container {
+        width: 100%; /* Ancho fijo */
+        height: auto; /* Alto fijo */
+    }
+
+    .buttons-containers {
+        display: flex; /* Usar flexbox para alinear los botones */
+        justify-content: center; /* Centrar los botones horizontalmente */
+        margin-top: 20px; /* Espacio en la parte superior */
+    }
+
+    h1 {
+        font-size: 2rem;
+        margin-top: 10rem; /* Espacio en la parte superior */
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    h2 {
+        font-size: 0.5rem;
+    }
+
+    button{
+        margin-bottom: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+  
 }

@@ -33,17 +33,19 @@ h1 {
 
 .gallery {
     display: flex; /* Cambiar a flex para que se alineen en una fila */
+    justify-content: center;
     max-width: 1000px; /* Ancho máximo de la galería */
     flex-wrap: wrap;
-    justify-content: center;
+    
 }
 
 .item {
+    justify-content: center;
     text-align: center;
+    max-width: 218px;
     flex: 1; /* Permite que los elementos se distribuyan equitativamente */
     margin: 0 1rem; /* Espacio horizontal entre elementos */
-    max-width: 218px;
-    justify-content: center;
+    
 }
 
 .image-container {
@@ -103,4 +105,27 @@ img {
 
 .information {
     font-size: 12px;
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .gallery {
+      display: block; /* Ajustar el espaciado */
+    }
+    .item{
+        margin-bottom: 20px;
+        max-width: 300px;
+    }
+
+    .image-container {
+        width: 100%;
+        height: 170px;
+        background-color: black;
+    }
+  
 }

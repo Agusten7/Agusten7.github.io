@@ -38,7 +38,9 @@ h1 {
 /* Contenedor de video */
 .video-container {
     margin: 20px 0; /* Espacio alrededor del contenedor */
-    width: 750px;
+    width: 640px;
+    word-wrap: break-word; /* Permite que las palabras se dividan */
+    overflow-wrap: break-word;
 }
 
 /* Contenedor de la imagen */

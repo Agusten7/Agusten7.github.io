@@ -103,3 +103,21 @@ img {
 .input-thumbnail {
     display: none;
 }
+
+.my-videos-container {
+    font-size: 14px;
+    color: #b3b3b3;
+    display: flex;
+    margin-top: 5px;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+
+.my-videos-container a {
+  color: #b3b3b3; /* Aplica el color deseado */
+}
+
+.my-videos-container a:visited {
+  color: #b3b3b3; /* Asegúrate de que el color no cambie para enlaces visitados */
+}

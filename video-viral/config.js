@@ -1,4 +1,4 @@
-const api_domain = "https://api-video-viral-mocha.vercel.app/";
+const api_domain = "https://api-video-viral-mocha.vercel.app";
 
 function getCookieValue(name) {
     const value = `; ${document.cookie}`;
